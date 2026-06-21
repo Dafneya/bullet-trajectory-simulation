@@ -1,0 +1,50 @@
+import math
+import matplotlib.pyplot as plt
+
+# Ввод данных
+v0 = float(input("Начальная скорость (м/с): "))
+angle = float(input("Угол выстрела (градусы): "))
+g = 9.81
+dt = 0.01
+
+# Переводим угол в радианы
+rad = math.radians(angle)
+
+# Начальные скорости по осям
+vx = v0 * math.cos(rad)
+vy = v0 * math.sin(rad)
+
+# Списки для графика
+x_vals = [0]
+y_vals = [0]
+
+x = 0
+y = 0
+
+while y >= 0:
+    # Сопротивление воздуха (чем больше k, тем сильнее торможение)
+    k = 0.01
+    v = math.sqrt(vx**2 + vy**2)
+    vx = vx - k * v * vx * dt
+    vy = vy - g * dt - k * v * vy * dt
+    
+    x = x + vx * dt
+    y = y + vy * dt
+    
+    x_vals.append(x)
+    y_vals.append(y)
+    
+    if y < 0:
+        break
+
+# Вывод результата
+print(f"Дальность полёта: {x:.2f} метров")
+print(f"Максимальная высота: {max(y_vals):.2f} метров")
+
+# Рисуем график
+plt.plot(x_vals, y_vals)
+plt.xlabel("Расстояние (м)")
+plt.ylabel("Высота (м)")
+plt.title("Траектория пули")
+plt.grid(True)
+plt.show()
